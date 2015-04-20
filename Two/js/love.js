@@ -33,7 +33,7 @@ two.scene.translation.set(two.width / 2, two.height / 2);
 // Style the shape
 shape.fill = 'rgb(0, 0, 0)';
 shape.stroke = 'rgb(255, 255, 255)';
-shape.linewidth = 10;
+shape.linewidth = 0;
 /*
 // This is the animation loop
 two.bind('update', function(frameCount, timeDelta) {
@@ -54,17 +54,24 @@ two.bind('update', function(frameCount, timeDelta) {
 
 var change = true;
 var mult = 1;
+var times = 1;
 two.bind('update', function(){
-    window.addEventListener("keydown", checkKeyPressed, false);
+    /*window.addEventListener("keydown", checkKeyPressed, false);
     function checkKeyPressed(e) {
       if(e.keyCode == 32 && change == true){
        // user has pressed space
-      mult*=-1;
+      //mult*=-1;
+      shape.linewidth = 0;
       change = false;
       setTimeout(function(){change=true}, 1);
       }
-    }
-    shape.linewidth+=10*mult;
+    }*/
+
+    if (times == 100 || times == 0) mult*=-1;
+    shape.linewidth+=1*mult;
+    times+=mult;
+    
+
     update();
     shape.rotation+=.005;
 });
