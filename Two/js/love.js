@@ -6,7 +6,7 @@ var two = new Two({
 }).appendTo(document.body);
 
 // External variables
-var k = 0;
+var k = 2;
 var radius = 400;
 
 // Internal variables
@@ -33,7 +33,7 @@ two.scene.translation.set(two.width / 2, two.height / 2);
 // Style the shape
 shape.fill = 'rgb(0, 0, 0)';
 shape.stroke = 'rgb(255, 255, 255)';
-shape.linewidth = 0;
+shape.linewidth = 10;
 /*
 // This is the animation loop
 two.bind('update', function(frameCount, timeDelta) {
@@ -53,20 +53,30 @@ two.bind('update', function(frameCount, timeDelta) {
 */
 
 var change = false;
+var half = false;
+var bchange = false;
+var bhalf = false;
+
 var mult = 1;
 var times = 1;
 var rottimes = 1;
 var rotmult = 1;
-var half = false;
+
 
 two.bind('update', function(){
     window.addEventListener("keydown", checkKeyPressed, false);
     function checkKeyPressed(e) {
       if(e.keyCode == 32 && change == false){
-       // user has pressed space
-      change = true;
-      setTimeout(function(){half=true;}, 1000);
-      setTimeout(function(){change=false;}, 2000);
+        // user has pressed space
+        change = true;
+        setTimeout(function(){half=true;}, 1000);
+        setTimeout(function(){change=false;}, 2000);
+      }
+
+      if (e.keyCode == 66 && bchange == false){
+        // user has pressed b
+        bchange = true;
+        //setTimeout(function(){bchange=false;}, 2000);
       }
     }
 
@@ -76,33 +86,62 @@ two.bind('update', function(){
     } else {
         spin();
     }
+
+    if (!bchange){
+
+    } else {
+        big();
+    }
 });
 
 function passive() {
     if (times == 100 || times == 0) mult*=-1;
-    shape.linewidth+=1*mult;
+    shape.linewidth+=2*mult;
     times+=mult;
 
     if (rottimes == 0 || rottimes == 100) rotmult*=-1;
-    shape.rotation+=.03*rotmult;
+    shape.rotation+=.015*rotmult;
     rottimes+=rotmult;
 }
 
 var spintimes = 0;
 var spinmult = 1;
 function spin() {
+    console.log(shape.rotation);
     shape.rotation += (spintimes+=.005*spinmult);
     if (half == true) {
         spinmult*=-1;
+        babies();
         half = false;
+    }
+}
+
+function babies() {
+    k = (k + 1) % 10;
+    if (k == 0 || k == 1) k = 2;
+    update();
+}
+
+var sizetimes = 0;
+var sizemult = 1;
+function big() {
+    console.log(shape.scale);
+    console.log(sizetimes);
+    shape.scale += (.05*sizemult);
+    sizetimes++;
+    if (sizetimes == 50) {
+        sizemult*=-1;
+    } else if (sizetimes == 101){
+        bchange = false;
+        sizetimes = 0;
     }
 }
 
 // Update all points of a shape based on `k`
  function update() {
     for (var i = 0; i < resolution; i++) {
-        if (k != 1) {
-            roseMath(points[i], 4, Math.PI * 2 * i / resolution);
+        if (k  != 1) {
+            roseMath(points[i], k, Math.PI * 2 * i / resolution);
         }
     }
 }
