@@ -55,6 +55,8 @@ two.bind('update', function(frameCount, timeDelta) {
 var change = true;
 var mult = 1;
 var times = 1;
+var rot = 0;
+var rotmult = 1;
 two.bind('update', function(){
     /*window.addEventListener("keydown", checkKeyPressed, false);
     function checkKeyPressed(e) {
@@ -73,7 +75,12 @@ two.bind('update', function(){
     
 
     update();
-    shape.rotation+=.005;
+    shape.rotation+=rot;
+    rot+=.001*rotmult;
+    console.log("shape rot:" + shape.rotation);
+    console.log("reg rot:" + rot);
+    console.log(rotmult);
+    if (rot == 0 || rot == .010) rotmult*=-1;
 });
 
 
