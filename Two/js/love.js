@@ -7,7 +7,7 @@ var two = new Two({
 
 // External variables
 var k = 0;
-var radius = 200;
+var radius = 400;
 
 // Internal variables
 var time = 0;
@@ -33,7 +33,7 @@ two.scene.translation.set(two.width / 2, two.height / 2);
 // Style the shape
 shape.fill = 'rgb(0, 0, 0)';
 shape.stroke = 'rgb(255, 255, 255)';
-shape.linewidth = 6;
+shape.linewidth = 10;
 /*
 // This is the animation loop
 two.bind('update', function(frameCount, timeDelta) {
@@ -51,15 +51,30 @@ two.bind('update', function(frameCount, timeDelta) {
 
 });
 */
+
+var change = true;
+var mult = 1;
 two.bind('update', function(){
-    k = (3 + 1) % 20;
+    window.addEventListener("keydown", checkKeyPressed, false);
+    function checkKeyPressed(e) {
+      if(e.keyCode == 32 && change == true){
+       // user has pressed space
+      mult*=-1;
+      change = false;
+      setTimeout(function(){change=true}, 1);
+      }
+    }
+    shape.linewidth+=10*mult;
     update();
+    shape.rotation+=.005;
 });
+
+
 // Update all points of a shape based on `k`
  function update() {
     for (var i = 0; i < resolution; i++) {
         if (k != 1) {
-            roseMath(points[i], k, Math.PI * 2 * i / resolution);
+            roseMath(points[i], 4, Math.PI * 2 * i / resolution);
         }
     }
 }
