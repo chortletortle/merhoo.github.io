@@ -52,37 +52,51 @@ two.bind('update', function(frameCount, timeDelta) {
 });
 */
 
-var change = true;
+var change = false;
 var mult = 1;
 var times = 1;
-var rot = 0;
+var rottimes = 1;
 var rotmult = 1;
-two.bind('update', function(){
-    /*window.addEventListener("keydown", checkKeyPressed, false);
-    function checkKeyPressed(e) {
-      if(e.keyCode == 32 && change == true){
-       // user has pressed space
-      //mult*=-1;
-      shape.linewidth = 0;
-      change = false;
-      setTimeout(function(){change=true}, 1);
-      }
-    }*/
+var half = false;
 
+two.bind('update', function(){
+    window.addEventListener("keydown", checkKeyPressed, false);
+    function checkKeyPressed(e) {
+      if(e.keyCode == 32 && change == false){
+       // user has pressed space
+      change = true;
+      setTimeout(function(){half=true;}, 1000);
+      setTimeout(function(){change=false;}, 2000);
+      }
+    }
+
+    update();
+    if (!change){
+        passive();
+    } else {
+        spin();
+    }
+});
+
+function passive() {
     if (times == 100 || times == 0) mult*=-1;
     shape.linewidth+=1*mult;
     times+=mult;
-    
 
-    update();
-    shape.rotation+=rot;
-    rot+=.001*rotmult;
-    console.log("shape rot:" + shape.rotation);
-    console.log("reg rot:" + rot);
-    console.log(rotmult);
-    if (rot == 0 || rot == .010) rotmult*=-1;
-});
+    if (rottimes == 0 || rottimes == 100) rotmult*=-1;
+    shape.rotation+=.03*rotmult;
+    rottimes+=rotmult;
+}
 
+var spintimes = 0;
+var spinmult = 1;
+function spin() {
+    shape.rotation += (spintimes+=.005*spinmult);
+    if (half == true) {
+        spinmult*=-1;
+        half = false;
+    }
+}
 
 // Update all points of a shape based on `k`
  function update() {
