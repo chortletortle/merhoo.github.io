@@ -26,12 +26,25 @@ var scale = two.width > two.height ? two.height / dimensions : two.width / dimen
 var easing = 0.125;
 
 // Create our shape
-var shape = two.makeCurve(points);
+//var shape = two.makeCurve(points);
+var shape = two.makeRectangle(0, 0, 100, 100);
+// Create our array that keeps track of movement data
+// 1 = line width multiplier, 2 = line width times tracker
+// 3 = rotation multiplier, 4 = rotation times tracker
+var shapeArr = [shape, 1, 1, 1, 1];
+
+var change = false;
+var half = false;
+var bchange = false;
+var bhalf = false;
+
+
+
 // Center it on the screen
 two.scene.translation.set(two.width / 2, two.height / 2);
 
 // Style the shape
-shape.fill = 'rgb(0, 0, 0)';
+shape.fill = 'rgb(100, 0, 0)';
 shape.stroke = 'rgb(255, 255, 255)';
 shape.linewidth = 10;
 /*
@@ -52,15 +65,7 @@ two.bind('update', function(frameCount, timeDelta) {
 });
 */
 
-var change = false;
-var half = false;
-var bchange = false;
-var bhalf = false;
 
-var mult = 1;
-var times = 1;
-var rottimes = 1;
-var rotmult = 1;
 
 
 two.bind('update', function(){
@@ -82,7 +87,7 @@ two.bind('update', function(){
 
     update();
     if (!change){
-        passive();
+        passive(shapeArr);
     } else {
         spin();
     }
@@ -94,14 +99,14 @@ two.bind('update', function(){
     }
 });
 
-function passive() {
-    if (times == 100 || times == 0) mult*=-1;
-    shape.linewidth+=2*mult;
-    times+=mult;
+function passive(arr) {
+    if (arr[2] == 100 || arr[2] == 0) arr[1]*=-1;
+    arr[0].linewidth+=2*arr[1];
+    arr[2]+=arr[1];
 
-    if (rottimes == 0 || rottimes == 100) rotmult*=-1;
-    shape.rotation+=.015*rotmult;
-    rottimes+=rotmult;
+    if (arr[4] == 0 || arr[4] == 100) arr[3]*=-1;
+    arr[0].rotation+=.015*arr[3];
+    arr[4]+=arr[3];
 }
 
 var spintimes = 0;
