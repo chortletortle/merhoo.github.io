@@ -1,4 +1,4 @@
-document.body.style.background = 'rgb(0, 0, 0)';
+document.body.style.background = 'rgb(8, 124, 167)';
 // Setup the canvas
 var two = new Two({
     fullscreen: true,
@@ -26,12 +26,18 @@ var scale = two.width > two.height ? two.height / dimensions : two.width / dimen
 var easing = 0.125;
 
 // Create our shape
-//var shape = two.makeCurve(points);
-var shape = two.makeRectangle(0, 0, 100, 100);
+var shape = two.makeCurve(points);
 // Create our array that keeps track of movement data
 // 1 = line width multiplier, 2 = line width times tracker
 // 3 = rotation multiplier, 4 = rotation times tracker
-var shapeArr = [shape, 1, 1, 1, 1];
+// 5 = spin multiplier, 6 = spin
+var shapeArr = [shape, 1, 1, 1, 1, 1, 1];
+var circle = two.makeCircle(0, 0, 100);
+var circleArr = [circle, 1, 1, 1, 1, 1, 1];
+circle.linewidth = 0;
+circle.fill = 'rgb(252, 255, 108)';
+circle.stroke = 'rgb(252, 255, 108)';
+
 
 var change = false;
 var half = false;
@@ -43,9 +49,10 @@ var bhalf = false;
 // Center it on the screen
 two.scene.translation.set(two.width / 2, two.height / 2);
 
+
 // Style the shape
-shape.fill = 'rgb(100, 0, 0)';
-shape.stroke = 'rgb(255, 255, 255)';
+shape.fill = 'rgb(175, 206, 224)';
+shape.stroke = 'rgb(0, 72, 132)';
 shape.linewidth = 10;
 /*
 // This is the animation loop
@@ -87,9 +94,10 @@ two.bind('update', function(){
 
     update();
     if (!change){
-        passive(shapeArr);
+        passive(shapeArr, 1.5);
+        passive(circleArr, .3);
     } else {
-        spin();
+        spin(shapeArr);
     }
 
     if (!bchange){
@@ -99,9 +107,9 @@ two.bind('update', function(){
     }
 });
 
-function passive(arr) {
+function passive(arr, num) {
     if (arr[2] == 100 || arr[2] == 0) arr[1]*=-1;
-    arr[0].linewidth+=2*arr[1];
+    arr[0].linewidth+=num*arr[1];
     arr[2]+=arr[1];
 
     if (arr[4] == 0 || arr[4] == 100) arr[3]*=-1;
@@ -109,11 +117,11 @@ function passive(arr) {
     arr[4]+=arr[3];
 }
 
+//CONSTANT - USE AS ANIMATION
 var spintimes = 0;
 var spinmult = 1;
-function spin() {
-    console.log(shape.rotation);
-    shape.rotation += (spintimes+=.005*spinmult);
+function spin(arr) {
+    arr[0].rotation += (spintimes+=.005*spinmult);
     if (half == true) {
         spinmult*=-1;
         babies();
@@ -130,8 +138,6 @@ function babies() {
 var sizetimes = 0;
 var sizemult = 1;
 function big() {
-    console.log(shape.scale);
-    console.log(sizetimes);
     shape.scale += (.05*sizemult);
     sizetimes++;
     if (sizetimes == 50) {
