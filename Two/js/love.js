@@ -30,10 +30,11 @@ var shape = two.makeCurve(points);
 // Create our array that keeps track of movement data
 // 1 = line width multiplier, 2 = line width times tracker
 // 3 = rotation multiplier, 4 = rotation times tracker
-// 5 = spin multiplier, 6 = spin
-var shapeArr = [shape, 1, 1, 1, 1, 1, 1];
+// 5 = spin multiplier, 6 = spin times tracker
+// 7 = size multiplier, 8 = size times tracker
+var shapeArr = [shape, 1, 1, 1, 1, 1, 1, 0, 1];
 var circle = two.makeCircle(0, 0, 100);
-var circleArr = [circle, 1, 1, 1, 1, 1, 1];
+var circleArr = [circle, 1, 1, 1, 1, 1, 1, 0, 1];
 circle.linewidth = 0;
 circle.fill = 'rgb(252, 255, 108)';
 circle.stroke = 'rgb(252, 255, 108)';
@@ -94,8 +95,8 @@ two.bind('update', function(){
 
     update();
     if (!change){
-        passive(shapeArr, 1.5);
-        passive(circleArr, .3);
+        passive(shapeArr, 1.25);
+        passive(circleArr, .8);
     } else {
         spin(shapeArr);
     }
@@ -103,7 +104,9 @@ two.bind('update', function(){
     if (!bchange){
 
     } else {
-        big();
+        big(shapeArr, .7);
+        
+        big(circleArr, .05);
     }
 });
 
@@ -137,14 +140,16 @@ function babies() {
 
 var sizetimes = 0;
 var sizemult = 1;
-function big() {
-    shape.scale += (.05*sizemult);
-    sizetimes++;
-    if (sizetimes == 50) {
-        sizemult*=-1;
-    } else if (sizetimes == 101){
+function big(arr, num) {
+    arr[0].scale += (num*arr[8]);
+    console.log(num + " " + arr[0].scale);
+    arr[7]++;
+    if (arr[7] == 50) {
+        arr[8]*=-1;
+    } else if (arr[7] == 100){
         bchange = false;
-        sizetimes = 0;
+        arr[7] = 0;
+        // if we want only growing, not shrinking - arr[8] = 1;
     }
 }
 
